@@ -1,0 +1,7 @@
+services:
+  build:
+    image: j2me-compiler:local
+    working_dir: /workspace
+    entrypoint: ["bash", "/workspace/build.sh"]
+    volumes:
+      - .:/workspace

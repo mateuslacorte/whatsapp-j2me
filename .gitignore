@@ -1,0 +1,8 @@
+.DS_Store
+._*
+/classes/
+/tmpclasses/
+/bin/*.jar
+/bin/*.jad
+/bin/MANIFEST.MF
+/sources.txt
