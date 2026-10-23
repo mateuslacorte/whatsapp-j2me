@@ -4,6 +4,8 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 import javax.microedition.io.SocketConnection;
 import java.io.IOException;
+import com.whatsapp.storage.AccountStore;
+import com.whatsapp.util.Base64;
 
 /**
  * Universal network connection utility for J2ME.
@@ -57,13 +59,38 @@ public class NetworkUtil {
         }
     }
 
+    /** Authorize only requests inside the configured bridge URL. */
+    public static void authorize(HttpConnection conn, String url) throws IOException {
+        String base = AccountStore.getInstance().getBaseUrl();
+        while (base.endsWith("/")) base = base.substring(0, base.length() - 1);
+        if (!(url.equals(base) || url.startsWith(base + "/") || url.startsWith(base + "?"))) return;
+        String username = AccountStore.BRIDGE_USERNAME;
+        String password = AccountStore.BRIDGE_PASSWORD;
+        if (username.length() == 0 && password.length() == 0) return;
+        if (username.length() == 0 || password.length() == 0 || username.indexOf(':') >= 0) {
+            throw new IOException("Invalid bridge Basic Auth credentials");
+        }
+        conn.setRequestProperty("Authorization", "Basic " + Base64.encode((username + ":" + password).getBytes("UTF-8")));
+    }
+
+    private static HttpConnection openAuthorizedHttp(String url, String transportUrl, int mode) throws IOException {
+        HttpConnection conn = (HttpConnection) Connector.open(transportUrl, mode);
+        try {
+            authorize(conn, url);
+            return conn;
+        } catch (IOException e) {
+            try { conn.close(); } catch (Exception ignored) {}
+            throw e;
+        }
+    }
+
     public static HttpConnection openHttp(String url) throws IOException {
         return openHttp(url, Connector.READ_WRITE);
     }
 
     public static HttpConnection openHttp(String url, int mode) throws IOException {
         if (!isBlackBerry()) {
-            return (HttpConnection) Connector.open(url, mode);
+            return openAuthorizedHttp(url, url, mode);
         }
 
         IOException lastEx = null;
@@ -71,7 +98,7 @@ public class NetworkUtil {
             int attempt = (preferredMode + i) % TOTAL_MODES;
             String fullUrl = getUrlForMode(url, attempt);
             try {
-                HttpConnection conn = (HttpConnection) Connector.open(fullUrl, mode);
+                HttpConnection conn = openAuthorizedHttp(url, fullUrl, mode);
                 preferredMode = attempt;
                 return conn;
             } catch (IOException e) {
@@ -90,7 +117,7 @@ public class NetworkUtil {
 
     public static HttpConnection openAndConnect(String url, String method, String userAgent) throws IOException {
         if (!isBlackBerry()) {
-            HttpConnection conn = (HttpConnection) Connector.open(url, Connector.READ_WRITE);
+            HttpConnection conn = openAuthorizedHttp(url, url, Connector.READ_WRITE);
             if (userAgent != null) {
                 conn.setRequestProperty("User-Agent", userAgent);
             }
@@ -104,7 +131,7 @@ public class NetworkUtil {
             String fullUrl = getUrlForMode(url, attempt);
             HttpConnection conn = null;
             try {
-                conn = (HttpConnection) Connector.open(fullUrl, Connector.READ_WRITE);
+                conn = openAuthorizedHttp(url, fullUrl, Connector.READ_WRITE);
                 if (userAgent != null) {
                     conn.setRequestProperty("User-Agent", userAgent);
                 }

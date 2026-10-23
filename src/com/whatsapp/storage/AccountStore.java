@@ -17,6 +17,9 @@ public class AccountStore {
     public static final String BRIDGE_HOST = "wpp.j2me.lacorte.dev";
     public static final int BRIDGE_PORT = 443;
     public static final String BRIDGE_PATH = "/server/whatsapp";
+    // Optional Nginx HTTP Basic Auth credentials, configured before compilation.
+    public static final String BRIDGE_USERNAME = "";
+    public static final String BRIDGE_PASSWORD = "";
     public static final int CALL_PORT = 5223;
 
     private String countryCode = "55";
