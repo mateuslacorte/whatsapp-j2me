@@ -19,7 +19,11 @@ if /i "%~1"=="clean" (
     popd
     exit /b 0
 )
-if not "%~1"=="" goto :usage
+if not "%~2"=="" goto :usage
+set "BUILD_LANGUAGE=ptbr"
+if not "%~1"=="" set "BUILD_LANGUAGE=%~1"
+if not "%BUILD_LANGUAGE%"=="ptbr" if not "%BUILD_LANGUAGE%"=="en" goto :usage
+echo === Building language: %BUILD_LANGUAGE% ===
 
 rem Use JAVA_HOME, a standard Java 6 install folder, or tools already on PATH.
 set "JDK_HOME="
@@ -81,6 +85,7 @@ if not exist bin mkdir bin
 echo === Finding Java sources ===
 if exist sources.txt del sources.txt
 dir /s /b /a-d src\*.java | findstr /v "\._" > sources.txt
+dir /s /b /a-d locales\%BUILD_LANGUAGE%\*.java >> sources.txt
 if exist to_unix_paths.vbs cscript //nologo to_unix_paths.vbs sources.txt
 if not exist sources.txt (
     echo No Java source files found under src.
@@ -192,6 +197,6 @@ if exist sources.txt (
 exit /b 0
 
 :usage
-echo Usage: %~nx0 [clean]
+echo Usage: %~nx0 [ptbr^|en^|clean]
 popd
 exit /b 1

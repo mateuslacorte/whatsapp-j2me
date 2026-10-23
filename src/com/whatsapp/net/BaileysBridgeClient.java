@@ -1,5 +1,7 @@
 package com.whatsapp.net;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.ChatMessage;
 import com.whatsapp.model.Contact;
 import com.whatsapp.protocol.Jid;
@@ -281,8 +283,8 @@ public class BaileysBridgeClient implements Runnable {
                 if (qPart != null && qPart.length() > 0) {
                     sb.append(",\"quoted_participant\":\"").append(escapeJson(qPart)).append("\"");
                 }
-                String qAuthor = quotedMsg.isFromMe() ? "Você" : 
-                    (quotedMsg.getSenderName() != null && quotedMsg.getSenderName().length() > 0 ? quotedMsg.getSenderName() : 
+                String qAuthor = quotedMsg.isFromMe() ? Text.get("Você") :
+                    (quotedMsg.getSenderName() != null && quotedMsg.getSenderName().length() > 0 ? quotedMsg.getSenderName() :
                     (quotedMsg.getParticipant() != null ? StringUtil.formatPhoneNumber(quotedMsg.getParticipant()) : ""));
                 if (qAuthor == null || qAuthor.length() == 0) {
                     qAuthor = quotedMsg.getQuotedSender();

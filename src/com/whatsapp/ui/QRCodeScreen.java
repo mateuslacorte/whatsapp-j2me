@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.net.BaileysBridgeClient;
 import com.whatsapp.net.NetworkUtil;
 import com.whatsapp.storage.AccountStore;
@@ -21,7 +23,7 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
     private Image[] loadingFrames;
     private int currentFrame = 0;
     private Thread animThread;
-    private String statusText = "Conectando ao servidor (" + AccountStore.BRIDGE_HOST + ")...";
+    private String statusText = Text.get("Conectando ao servidor (") + AccountStore.BRIDGE_HOST + ")...";
     private boolean isPolling = false;
     private Thread pollThread;
 
@@ -32,9 +34,9 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
     public QRCodeScreen(ScreenController controller) {
         this.controller = controller;
 
-        refreshCmd = new Command("Atualizar QR", Command.OK, 1);
-        skipCmd = new Command("Pular QR", Command.SCREEN, 2);
-        exitCmd = new Command("Sair", Command.EXIT, 3);
+        refreshCmd = new Command(Text.get("Atualizar QR"), Command.OK, 1);
+        skipCmd = new Command(Text.get("Pular QR"), Command.SCREEN, 2);
+        exitCmd = new Command(Text.get("Sair"), Command.EXIT, 3);
 
         addCommand(refreshCmd);
         addCommand(skipCmd);
@@ -106,7 +108,7 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
         if (message != null && message.length() > 0) {
             statusText = message;
         } else {
-            statusText = "Gerando QR Code...";
+            statusText = Text.get("Gerando QR Code...");
         }
         startPolling();
         repaint();
@@ -141,21 +143,21 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
 
             g.setColor(Theme.COLOR_TEXT_MAIN);
             g.setFont(boldFont);
-            g.drawString("Conectar aparelho:", leftX, startY, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("Conectar aparelho:"), leftX, startY, Graphics.TOP | Graphics.LEFT);
 
             g.setFont(smallFont);
             g.setColor(Theme.COLOR_TEXT_MUTED);
             int stepY = startY + boldFont.getHeight() + 6;
-            g.drawString("1. Abra o WhatsApp", leftX, stepY, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("1. Abra o WhatsApp"), leftX, stepY, Graphics.TOP | Graphics.LEFT);
             stepY += smallFont.getHeight() + 3;
-            g.drawString("2. Aparelhos Conectados", leftX, stepY, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("2. Aparelhos Conectados"), leftX, stepY, Graphics.TOP | Graphics.LEFT);
             stepY += smallFont.getHeight() + 3;
-            g.drawString("3. Aponte para esta tela", leftX, stepY, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("3. Aponte para esta tela"), leftX, stepY, Graphics.TOP | Graphics.LEFT);
 
             // Status message bottom-left
             int statusY = height - smallFont.getHeight() - 10;
             g.setFont(boldFont);
-            if (statusText != null && statusText.startsWith("Erro")) {
+            if (statusText != null && statusText.startsWith(Text.get("Erro"))) {
                 g.setColor(0xCC0000);
             } else {
                 g.setColor(Theme.COLOR_PRIMARY_TEAL);
@@ -186,7 +188,7 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
                 } else {
                     g.setColor(Theme.COLOR_TEXT_MUTED);
                     g.setFont(smallFont);
-                    g.drawString("Carregando QR...", centerX, centerY - smallFont.getHeight() / 2, Graphics.TOP | Graphics.HCENTER);
+                    g.drawString(Text.get("Carregando QR..."), centerX, centerY - smallFont.getHeight() / 2, Graphics.TOP | Graphics.HCENTER);
                 }
             }
         } else {
@@ -210,12 +212,12 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
                 } else {
                     g.setColor(Theme.COLOR_TEXT_MUTED);
                     g.setFont(smallFont);
-                    g.drawString("Carregando QR...", qrCenterX, qrCenterY - smallFont.getHeight() / 2, Graphics.TOP | Graphics.HCENTER);
+                    g.drawString(Text.get("Carregando QR..."), qrCenterX, qrCenterY - smallFont.getHeight() / 2, Graphics.TOP | Graphics.HCENTER);
                 }
             }
 
             g.setFont(smallFont);
-            if (statusText != null && statusText.startsWith("Erro")) {
+            if (statusText != null && statusText.startsWith(Text.get("Erro"))) {
                 g.setColor(0xCC0000);
             } else {
                 g.setColor(Theme.COLOR_PRIMARY_TEAL);
@@ -248,13 +250,13 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
                             } else {
                                 qrImage = rawImg;
                             }
-                            statusText = "Pronto para escanear!";
+                            statusText = Text.get("Pronto para escanear!");
                             repaint();
                         } else if (resCode == 404) {
-                            statusText = "Gerando QR Code...";
+                            statusText = Text.get("Gerando QR Code...");
                             repaint();
                         } else {
-                            statusText = "Servidor HTTP " + resCode;
+                            statusText = Text.get("Servidor HTTP ") + resCode;
                             repaint();
                         }
                     } catch (Exception e) {
@@ -262,9 +264,9 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
                         e.printStackTrace();
                         String errMsg = e.getMessage() != null ? e.getMessage() : "";
                         if (errMsg.indexOf("404") >= 0) {
-                            statusText = "Gerando QR Code...";
+                            statusText = Text.get("Gerando QR Code...");
                         } else {
-                            statusText = "Erro: " + (errMsg.length() > 0 ? errMsg : e.getClass().getName());
+                            statusText = Text.get("Erro: ") + (errMsg.length() > 0 ? errMsg : e.getClass().getName());
                         }
                         repaint();
                     } finally {
@@ -276,7 +278,7 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
                 // 2. Check Device Status
                 String status = BaileysBridgeClient.getInstance().checkStatus();
                 if ("connected".equals(status) || "open".equals(status)) {
-                    statusText = "Conectado com sucesso!";
+                    statusText = Text.get("Conectado com sucesso!");
                     repaint();
                     stopPolling();
                     acc.setRegistered(true);
@@ -300,7 +302,7 @@ public class QRCodeScreen extends Canvas implements CommandListener, Runnable {
         if (c == refreshCmd) {
             qrImage = null;
             currentFrame = 0;
-            statusText = "Buscando novo QR...";
+            statusText = Text.get("Buscando novo QR...");
             startAnimation();
             repaint();
         } else if (c == skipCmd) {

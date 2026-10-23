@@ -28,13 +28,20 @@ clean_build() {
 }
 
 if [ "${1:-}" = "clean" ]; then
-    [ "$#" -eq 1 ] || fail "Usage: $0 [clean]"
+    [ "$#" -eq 1 ] || fail "Usage: $0 [ptbr|en|clean]"
     clean_build
     echo "Removed generated build files."
     exit 0
-elif [ "$#" -ne 0 ]; then
-    fail "Usage: $0 [clean]"
+elif [ "$#" -gt 1 ]; then
+    fail "Usage: $0 [ptbr|en|clean]"
 fi
+
+BUILD_LANGUAGE="${1:-ptbr}"
+case "$BUILD_LANGUAGE" in
+    ptbr|en) ;;
+    *) fail "Usage: $0 [ptbr|en|clean]" ;;
+esac
+echo "=== Building language: $BUILD_LANGUAGE ==="
 
 require_file() {
     [ -f "$1" ] || fail "Required file not found: $1"
@@ -79,6 +86,7 @@ trap 'rm -rf "$PROJECT_DIR/tmpclasses" "$PROJECT_DIR/classes"; rm -f "$PROJECT_D
 
 echo "=== Finding Java sources ==="
 find src -type f -name '*.java' ! -name '._*' -print | sort > sources.txt
+find "locales/$BUILD_LANGUAGE" -type f -name '*.java' -print >> sources.txt
 [ -s sources.txt ] || fail "No Java source files found under src."
 
 echo "=== Compiling Java sources ==="

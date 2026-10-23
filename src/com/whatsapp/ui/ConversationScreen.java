@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.ChatMessage;
 import com.whatsapp.model.Contact;
 import com.whatsapp.net.BaileysBridgeClient;
@@ -42,10 +44,10 @@ public class ConversationScreen extends Form implements CommandListener, VoiceAu
             ChatStore.getInstance().clearUnread(contact.getJid());
         }
 
-        sendCmd = new Command("Enviar", Command.OK, 1);
-        voiceNoteCmd = new Command("Gravar Audio", Command.ITEM, 2);
-        callCmd = new Command("Ligar (Voz)", Command.SCREEN, 3);
-        backCmd = new Command("Voltar", Command.BACK, 4);
+        sendCmd = new Command(Text.get("Enviar"), Command.OK, 1);
+        voiceNoteCmd = new Command(Text.get("Gravar Audio"), Command.ITEM, 2);
+        callCmd = new Command(Text.get("Ligar (Voz)"), Command.SCREEN, 3);
+        backCmd = new Command(Text.get("Voltar"), Command.BACK, 4);
 
         addCommand(sendCmd);
         addCommand(voiceNoteCmd);
@@ -57,7 +59,7 @@ public class ConversationScreen extends Form implements CommandListener, VoiceAu
         statusItem = new StringItem(null, "");
         append(statusItem);
 
-        inputField = new TextField("Mensagem:", "", 256, TextField.ANY);
+        inputField = new TextField(Text.get("Mensagem:"), "", 256, TextField.ANY);
         append(inputField);
 
         renderMessages();
@@ -71,7 +73,7 @@ public class ConversationScreen extends Form implements CommandListener, VoiceAu
         Vector msgs = ChatStore.getInstance().getMessages(contact.getJid());
         for (int i = 0; i < msgs.size(); i++) {
             ChatMessage m = (ChatMessage) msgs.elementAt(i);
-            String prefix = m.isFromMe() ? "Eu: " : (contact.getName() + ": ");
+            String prefix = m.isFromMe() ? Text.get("Eu: ") : (contact.getName() + ": ");
             StringItem item = new StringItem(prefix, m.getText());
             append(item);
         }
@@ -116,7 +118,7 @@ public class ConversationScreen extends Form implements CommandListener, VoiceAu
                         ProtocolTreeNode msgNode = new ProtocolTreeNode("message", attrs, bodyNode);
                         SocketConnectionManager.getInstance().sendNode(msgNode);
                     } catch (Exception e) {
-                        statusItem.setText("Erro ao enviar: " + e.getMessage());
+                        statusItem.setText(Text.get("Erro ao enviar: ") + e.getMessage());
                     }
                 }
             }
@@ -126,25 +128,25 @@ public class ConversationScreen extends Form implements CommandListener, VoiceAu
     private void toggleVoiceRecording() {
         VoiceAudioEngine engine = VoiceAudioEngine.getInstance();
         if (!engine.isRecording()) {
-            statusItem.setText("Gravando audio PTT... Selecione Gravar para finalizar.");
+            statusItem.setText(Text.get("Gravando audio PTT... Selecione Gravar para finalizar."));
             engine.startRecording(this);
         } else {
-            statusItem.setText("Enviando audio...");
+            statusItem.setText(Text.get("Enviando audio..."));
             engine.stopRecording(this);
         }
     }
 
     public void onRecordFinished(byte[] audioData) {
         if (audioData != null && audioData.length > 0) {
-            String noteText = "\uD83C\uDFA7 [Audio gravado: " + (audioData.length / 1024) + " KB]";
+            String noteText = Text.get("\uD83C\uDFA7 [Audio gravado: ") + (audioData.length / 1024) + " KB]";
             sendMessage(noteText);
-            statusItem.setText("Audio enviado!");
+            statusItem.setText(Text.get("Audio enviado!"));
         } else {
-            statusItem.setText("Nenhum audio gravado.");
+            statusItem.setText(Text.get("Nenhum audio gravado."));
         }
     }
 
     public void onRecordError(String message) {
-        statusItem.setText("Erro audio: " + message);
+        statusItem.setText(Text.get("Erro audio: ") + message);
     }
 }

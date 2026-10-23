@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.Contact;
 import com.whatsapp.net.BaileysBridgeClient;
 import com.whatsapp.protocol.Jid;
@@ -30,10 +32,10 @@ public class ChatListCanvas extends Canvas implements CommandListener {
     public ChatListCanvas(ScreenController controller) {
         this.controller = controller;
 
-        openChatCmd = new Command("Abrir Chat", Command.ITEM, 1);
-        refreshCmd = new Command("Atualizar", Command.SCREEN, 2);
-        newChatCmd = new Command("Novo Chat", Command.SCREEN, 3);
-        exitCmd = new Command("Sair", Command.EXIT, 4);
+        openChatCmd = new Command(Text.get("Abrir Chat"), Command.ITEM, 1);
+        refreshCmd = new Command(Text.get("Atualizar"), Command.SCREEN, 2);
+        newChatCmd = new Command(Text.get("Novo Chat"), Command.SCREEN, 3);
+        exitCmd = new Command(Text.get("Sair"), Command.EXIT, 4);
 
         addCommand(openChatCmd);
         addCommand(refreshCmd);
@@ -81,11 +83,11 @@ public class ChatListCanvas extends Canvas implements CommandListener {
             g.setColor(Theme.COLOR_TEXT_MUTED);
             g.setFont(Theme.FONT_CHAT_MSG);
             if (isLoading) {
-                g.drawString("Carregando conversas do celular...", width / 2, height / 2 - 12, Graphics.TOP | Graphics.HCENTER);
-                g.drawString("Aguarde um instante...", width / 2, height / 2 + 10, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Carregando conversas do celular..."), width / 2, height / 2 - 12, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Aguarde um instante..."), width / 2, height / 2 + 10, Graphics.TOP | Graphics.HCENTER);
             } else {
-                g.drawString("Aguardando conversas do WhatsApp...", width / 2, height / 2 - 12, Graphics.TOP | Graphics.HCENTER);
-                g.drawString("Pressione 'Atualizar' ou 'Novo Chat'", width / 2, height / 2 + 10, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Aguardando conversas do WhatsApp..."), width / 2, height / 2 - 12, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Pressione 'Atualizar' ou 'Novo Chat'"), width / 2, height / 2 + 10, Graphics.TOP | Graphics.HCENTER);
             }
             return;
         }
@@ -261,14 +263,14 @@ public class ChatListCanvas extends Canvas implements CommandListener {
     }
 
     private void showNewChatDialog() {
-        final Form form = new Form("Novo Chat WhatsApp");
-        final TextField phoneField = new TextField("Numero com DDD (ex: 5511999998888):", "", 25, TextField.PHONENUMBER);
-        final TextField nameField = new TextField("Nome do Contato:", "", 30, TextField.ANY);
+        final Form form = new Form(Text.get("Novo Chat WhatsApp"));
+        final TextField phoneField = new TextField(Text.get("Numero com DDD (ex: 5511999998888):"), "", 25, TextField.PHONENUMBER);
+        final TextField nameField = new TextField(Text.get("Nome do Contato:"), "", 30, TextField.ANY);
         form.append(phoneField);
         form.append(nameField);
 
-        Command okCmd = new Command("Criar Chat", Command.OK, 1);
-        Command cancelCmd = new Command("Cancelar", Command.CANCEL, 2);
+        Command okCmd = new Command(Text.get("Criar Chat"), Command.OK, 1);
+        Command cancelCmd = new Command(Text.get("Cancelar"), Command.CANCEL, 2);
         form.addCommand(okCmd);
         form.addCommand(cancelCmd);
 

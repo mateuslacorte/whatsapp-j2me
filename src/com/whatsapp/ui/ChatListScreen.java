@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.Contact;
 import com.whatsapp.protocol.Jid;
 import com.whatsapp.storage.AccountStore;
@@ -26,11 +28,11 @@ public class ChatListScreen extends List implements CommandListener {
         super("WhatsApp", List.IMPLICIT);
         this.controller = controller;
 
-        openChatCmd = new Command("Abrir Chat", Command.ITEM, 1);
-        startCallCmd = new Command("Fazer Chamada", Command.ITEM, 2);
-        newChatCmd = new Command("Novo Chat", Command.SCREEN, 3);
-        settingsCmd = new Command("Configurações", Command.SCREEN, 4);
-        exitCmd = new Command("Sair", Command.EXIT, 5);
+        openChatCmd = new Command(Text.get("Abrir Chat"), Command.ITEM, 1);
+        startCallCmd = new Command(Text.get("Fazer Chamada"), Command.ITEM, 2);
+        newChatCmd = new Command(Text.get("Novo Chat"), Command.SCREEN, 3);
+        settingsCmd = new Command(Text.get("Configurações"), Command.SCREEN, 4);
+        exitCmd = new Command(Text.get("Sair"), Command.EXIT, 5);
 
         addCommand(openChatCmd);
         addCommand(startCallCmd);
@@ -83,14 +85,14 @@ public class ChatListScreen extends List implements CommandListener {
     }
 
     private void showNewChatDialog() {
-        final Form form = new Form("Novo Chat");
-        final TextField phoneField = new TextField("Número (com DDD):", "", 20, TextField.PHONENUMBER);
-        final TextField nameField = new TextField("Nome:", "", 30, TextField.ANY);
+        final Form form = new Form(Text.get("Novo Chat"));
+        final TextField phoneField = new TextField(Text.get("Número (com DDD):"), "", 20, TextField.PHONENUMBER);
+        final TextField nameField = new TextField(Text.get("Nome:"), "", 30, TextField.ANY);
         form.append(phoneField);
         form.append(nameField);
 
         Command okCmd = new Command("OK", Command.OK, 1);
-        Command cancelCmd = new Command("Cancelar", Command.CANCEL, 2);
+        Command cancelCmd = new Command(Text.get("Cancelar"), Command.CANCEL, 2);
         form.addCommand(okCmd);
         form.addCommand(cancelCmd);
 

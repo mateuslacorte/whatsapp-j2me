@@ -1,5 +1,7 @@
 package com.whatsapp;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.ChatMessage;
 import com.whatsapp.model.Contact;
 import com.whatsapp.net.BaileysBridgeClient;
@@ -64,7 +66,7 @@ public class WhatsAppMIDlet extends MIDlet implements ScreenController, Connecti
         if (qrCodeScreen == null) {
             qrCodeScreen = new QRCodeScreen(this);
         } else {
-            qrCodeScreen.reset("Conecte seu WhatsApp");
+            qrCodeScreen.reset(Text.get("Conecte seu WhatsApp"));
         }
         display.setCurrent(qrCodeScreen);
     }
@@ -166,7 +168,7 @@ public class WhatsAppMIDlet extends MIDlet implements ScreenController, Connecti
                 if (qrCodeScreen == null) {
                     qrCodeScreen = new QRCodeScreen(WhatsAppMIDlet.this);
                 } else {
-                    qrCodeScreen.reset("Sessão desconectada. Escaneie novamente.");
+                    qrCodeScreen.reset(Text.get("Sessão desconectada. Escaneie novamente."));
                 }
                 display.setCurrent(qrCodeScreen);
             }

@@ -1,5 +1,7 @@
 package com.whatsapp.util;
 
+import com.whatsapp.i18n.Text;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
@@ -168,7 +170,7 @@ public class StringUtil {
 
         // WhatsApp internal LIDs (e.g. 14+ digits or containing @lid)
         if (raw.indexOf("@lid") >= 0 || (len >= 14 && (d.startsWith("2") || d.startsWith("1")))) {
-            return "Participante";
+            return Text.get("Participante");
         }
 
         // Fallback for valid international numbers (prefix with '+')

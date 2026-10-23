@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.ChatMessage;
 import com.whatsapp.model.Contact;
 import com.whatsapp.net.BaileysBridgeClient;
@@ -56,13 +58,13 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
             ChatStore.getInstance().clearUnread(contact.getJid());
         }
 
-        sendCmd = new Command("Digitar Msg", Command.OK, 1);
-        selectCmd = new Command("Selecionar Msg", Command.ITEM, 2);
-        voiceCmd = new Command("Audio PTT", Command.ITEM, 3);
-        backCmd = new Command("Voltar", Command.BACK, 4);
+        sendCmd = new Command(Text.get("Digitar Msg"), Command.OK, 1);
+        selectCmd = new Command(Text.get("Selecionar Msg"), Command.ITEM, 2);
+        voiceCmd = new Command(Text.get("Audio PTT"), Command.ITEM, 3);
+        backCmd = new Command(Text.get("Voltar"), Command.BACK, 4);
 
-        replyCmd = new Command("Responder", Command.OK, 1);
-        cancelSelectCmd = new Command("Desmarcar", Command.CANCEL, 2);
+        replyCmd = new Command(Text.get("Responder"), Command.OK, 1);
+        cancelSelectCmd = new Command(Text.get("Desmarcar"), Command.CANCEL, 2);
 
         updateCommandList();
         setCommandListener(this);
@@ -187,7 +189,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         String part = msg.getParticipant();
         if (part != null && part.trim().length() > 0) {
             if (part.indexOf("@lid") >= 0) {
-                return "~ Participante";
+                return Text.get("~ Participante");
             }
             return StringUtil.formatPhoneNumber(part);
         }
@@ -317,7 +319,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         int lastLineW = 0;
         if (showText) {
             if (rawText == null || rawText.length() == 0) {
-                rawText = "[Mensagem]";
+                rawText = Text.get("[Mensagem]");
             }
             Vector lines = wrapText(rawText, font, maxBubbleW - 20);
             textLinesCount = lines.size();
@@ -463,7 +465,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         if (isLoadingOlder) {
             if (y >= chatAreaY - 30 && y <= chatAreaY + chatAreaHeight) {
                 int pillH = Theme.FONT_TIMESTAMP.getHeight() + 8;
-                int textW = Theme.FONT_TIMESTAMP.stringWidth("Carregando anteriores...");
+                int textW = Theme.FONT_TIMESTAMP.stringWidth(Text.get("Carregando anteriores..."));
                 int pillW = Math.max(180, textW + 24);
                 int pillX = (width - pillW) / 2;
                 g.setColor(0xDDDDDD);
@@ -471,7 +473,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
                 g.setColor(0x555555);
                 g.setFont(Theme.FONT_TIMESTAMP);
                 int textY = y + (pillH - Theme.FONT_TIMESTAMP.getHeight()) / 2;
-                g.drawString("Carregando anteriores...", width / 2, textY, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Carregando anteriores..."), width / 2, textY, Graphics.TOP | Graphics.HCENTER);
             }
             y += OLDER_LOADING_INDICATOR_H;
         }
@@ -482,10 +484,10 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
             g.setColor(Theme.COLOR_TEXT_MUTED);
             g.setFont(Theme.FONT_CHAT_MSG);
             if (isLoadingInitial) {
-                g.drawString("Carregando mensagens...", width / 2, chatAreaY + (chatAreaHeight / 2), Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Carregando mensagens..."), width / 2, chatAreaY + (chatAreaHeight / 2), Graphics.TOP | Graphics.HCENTER);
             } else {
-                g.drawString("Nenhuma mensagem nesta conversa", width / 2, chatAreaY + (chatAreaHeight / 2) - 10, Graphics.TOP | Graphics.HCENTER);
-                g.drawString("Pressione OK para digitar", width / 2, chatAreaY + (chatAreaHeight / 2) + 10, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Nenhuma mensagem nesta conversa"), width / 2, chatAreaY + (chatAreaHeight / 2) - 10, Graphics.TOP | Graphics.HCENTER);
+                g.drawString(Text.get("Pressione OK para digitar"), width / 2, chatAreaY + (chatAreaHeight / 2) + 10, Graphics.TOP | Graphics.HCENTER);
             }
         } else {
             g.setFont(font);
@@ -505,7 +507,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
                 int lastLineW = 0;
                 if (showText) {
                     if (rawText == null || rawText.length() == 0) {
-                        rawText = "[Mensagem]";
+                        rawText = Text.get("[Mensagem]");
                     }
                     lines = wrapText(rawText, font, maxBubbleW - 20);
                     textLinesCount = lines.size();
@@ -588,7 +590,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
                                 g.setColor(Theme.COLOR_TEXT_MUTED);
                                 g.drawString(senderPhone, bubbleX + 10 + titleW, curY + 1, Graphics.TOP | Graphics.LEFT);
                             } else {
-                                String solo = (senderTitle.indexOf("Participante") >= 0) ? senderPhone : senderTitle;
+                                String solo = (senderTitle.indexOf(Text.get("Participante")) >= 0) ? senderPhone : senderTitle;
                                 if (Theme.FONT_CHAT_TITLE.stringWidth(solo) > availHeaderW) {
                                     while (solo.length() > 3 && Theme.FONT_CHAT_TITLE.stringWidth(solo + "...") > availHeaderW) {
                                         solo = solo.substring(0, solo.length() - 1);
@@ -630,7 +632,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
                         // Quoted author
                         g.setFont(Theme.FONT_CHAT_TITLE);
                         g.setColor(Theme.COLOR_PRIMARY_TEAL);
-                        String qSender = msg.getQuotedSender() != null ? StringUtil.formatPhoneNumber(msg.getQuotedSender()) : "Mensagem";
+                        String qSender = msg.getQuotedSender() != null ? StringUtil.formatPhoneNumber(msg.getQuotedSender()) : Text.get("Mensagem");
                         if (Theme.FONT_CHAT_TITLE.stringWidth(qSender) > maxQTextW) {
                             while (qSender.length() > 3 && Theme.FONT_CHAT_TITLE.stringWidth(qSender + "...") > maxQTextW) {
                                 qSender = qSender.substring(0, qSender.length() - 1);
@@ -681,10 +683,10 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
                             g.setFont(Theme.FONT_TIMESTAMP);
                             if (msg.isImageFailed()) {
                                 g.setColor(Theme.COLOR_TEXT_MUTED);
-                                g.drawString("Imagem indisponível", imgX + boxW / 2, imgY + (boxH - Theme.FONT_TIMESTAMP.getHeight()) / 2, Graphics.TOP | Graphics.HCENTER);
+                                g.drawString(Text.get("Imagem indisponível"), imgX + boxW / 2, imgY + (boxH - Theme.FONT_TIMESTAMP.getHeight()) / 2, Graphics.TOP | Graphics.HCENTER);
                             } else {
                                 g.setColor(Theme.COLOR_PRIMARY_TEAL);
-                                g.drawString("Carregando imagem...", imgX + boxW / 2, imgY + (boxH - Theme.FONT_TIMESTAMP.getHeight()) / 2, Graphics.TOP | Graphics.HCENTER);
+                                g.drawString(Text.get("Carregando imagem..."), imgX + boxW / 2, imgY + (boxH - Theme.FONT_TIMESTAMP.getHeight()) / 2, Graphics.TOP | Graphics.HCENTER);
                                 requestImageLoad(msg, maxBubbleW - 20);
                             }
                             curY += boxH + 6;
@@ -742,13 +744,13 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
             // Quoted author
             g.setFont(Theme.FONT_CHAT_TITLE);
             g.setColor(Theme.COLOR_PRIMARY_TEAL);
-            String replyAuthor = replyingToMessage.isFromMe() ? "Você" : 
-                (replyingToMessage.getSenderName() != null && replyingToMessage.getSenderName().length() > 0 ? replyingToMessage.getSenderName() : 
+            String replyAuthor = replyingToMessage.isFromMe() ? Text.get("Você") :
+                (replyingToMessage.getSenderName() != null && replyingToMessage.getSenderName().length() > 0 ? replyingToMessage.getSenderName() :
                 (replyingToMessage.getParticipant() != null ? StringUtil.formatPhoneNumber(replyingToMessage.getParticipant()) : contact.getName()));
             replyAuthor = StringUtil.formatPhoneNumber(replyAuthor);
             int maxBannerTextW = width - 50;
             if (replyAuthor != null) {
-                String repTitle = "Respondendo a " + replyAuthor;
+                String repTitle = Text.get("Respondendo a ") + replyAuthor;
                 if (Theme.FONT_CHAT_TITLE.stringWidth(repTitle) > maxBannerTextW) {
                     while (repTitle.length() > 3 && Theme.FONT_CHAT_TITLE.stringWidth(repTitle + "...") > maxBannerTextW) {
                         repTitle = repTitle.substring(0, repTitle.length() - 1);
@@ -797,13 +799,13 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         g.setColor(isRecordingAudio ? 0xCC0000 : Theme.COLOR_TEXT_MUTED);
         g.setFont(Theme.FONT_CHAT_MSG);
         if (isRecordingAudio) {
-            g.drawString("Gravando PTT... OK para enviar", 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("Gravando PTT... OK para enviar"), 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
         } else if (selectedMessageIndex != -1) {
-            g.drawString("Msg selecionada (OK: Responder)", 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("Msg selecionada (OK: Responder)"), 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
         } else if (showReplyBanner) {
-            g.drawString("Pressione OK para responder...", 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("Pressione OK para responder..."), 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
         } else {
-            g.drawString("Pressione OK para digitar...", 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
+            g.drawString(Text.get("Pressione OK para digitar..."), 22, inputY + 9, Graphics.TOP | Graphics.LEFT);
         }
 
         // 5. WhatsApp Dark Teal Header
@@ -819,13 +821,13 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
 
     private String getHeaderSubtitle() {
         if (isRecordingAudio) {
-            return "Gravando audio...";
+            return Text.get("Gravando audio...");
         }
         if (selectedMessageIndex != -1) {
-            return "1 selecionada";
+            return Text.get("1 selecionada");
         }
         if (isGroupChat()) {
-            return "toque para dados do grupo";
+            return Text.get("toque para dados do grupo");
         } else {
             String phone = contact != null && contact.getJid() != null ? contact.getJid().getUser() : null;
             if (phone != null && phone.length() > 0) {
@@ -1111,18 +1113,18 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         }
         titleName = StringUtil.formatPhoneNumber(titleName);
 
-        String boxTitle = "Mensagem para " + titleName;
+        String boxTitle = Text.get("Mensagem para ") + titleName;
         if (replyingToMessage != null) {
-            String qAuthor = replyingToMessage.isFromMe() ? "Você" : 
-                (replyingToMessage.getSenderName() != null && replyingToMessage.getSenderName().length() > 0 ? replyingToMessage.getSenderName() : 
+            String qAuthor = replyingToMessage.isFromMe() ? Text.get("Você") :
+                (replyingToMessage.getSenderName() != null && replyingToMessage.getSenderName().length() > 0 ? replyingToMessage.getSenderName() :
                 (replyingToMessage.getParticipant() != null ? StringUtil.formatPhoneNumber(replyingToMessage.getParticipant()) : contact.getName()));
             qAuthor = StringUtil.formatPhoneNumber(qAuthor);
-            boxTitle = "Resp a " + qAuthor;
+            boxTitle = Text.get("Resp a ") + qAuthor;
         }
 
         final TextBox tb = new TextBox(boxTitle, "", 500, TextField.ANY);
-        Command send = new Command("Enviar", Command.OK, 1);
-        Command cancel = new Command("Cancelar", Command.CANCEL, 2);
+        Command send = new Command(Text.get("Enviar"), Command.OK, 1);
+        Command cancel = new Command(Text.get("Cancelar"), Command.CANCEL, 2);
         tb.addCommand(send);
         tb.addCommand(cancel);
         tb.setCommandListener(new CommandListener() {
@@ -1154,8 +1156,8 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
         if (quotedMsg != null) {
             msg.setQuotedId(quotedMsg.getId());
             msg.setQuotedText(quotedMsg.getText());
-            String qAuthor = quotedMsg.isFromMe() ? "Você" : 
-                (quotedMsg.getSenderName() != null && quotedMsg.getSenderName().length() > 0 ? quotedMsg.getSenderName() : 
+            String qAuthor = quotedMsg.isFromMe() ? Text.get("Você") :
+                (quotedMsg.getSenderName() != null && quotedMsg.getSenderName().length() > 0 ? quotedMsg.getSenderName() :
                 (quotedMsg.getParticipant() != null ? StringUtil.formatPhoneNumber(quotedMsg.getParticipant()) : contact.getName()));
             qAuthor = StringUtil.formatPhoneNumber(qAuthor);
             msg.setQuotedSender(qAuthor);
@@ -1221,7 +1223,7 @@ public class ConversationCanvas extends Canvas implements CommandListener, Voice
 
     public void onRecordFinished(final byte[] audioData) {
         if (audioData != null && audioData.length > 0) {
-            final String noteText = "\uD83C\uDFA7 Mensagem de Voz";
+            final String noteText = Text.get("\uD83C\uDFA7 Mensagem de Voz");
             long now = System.currentTimeMillis();
             Vector existing = ChatStore.getInstance().getMessages(contact.getJid());
             if (existing != null && !existing.isEmpty()) {

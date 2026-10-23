@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.model.Contact;
 import com.whatsapp.protocol.Jid;
 import com.whatsapp.storage.ChatStore;
@@ -28,7 +30,7 @@ public class CallScreen extends Form implements CommandListener, VoiceCallManage
     private boolean isOutgoing;
 
     public CallScreen(ScreenController controller, Jid peerJid, boolean isOutgoing) {
-        super("Chamada de Voz");
+        super(Text.get("Chamada de Voz"));
         this.controller = controller;
         this.peerJid = peerJid;
         this.isOutgoing = isOutgoing;
@@ -36,17 +38,17 @@ public class CallScreen extends Form implements CommandListener, VoiceCallManage
         Contact contact = ChatStore.getInstance().getContact(peerJid);
         String name = contact != null ? contact.getName() : peerJid.getUser();
 
-        contactNameItem = new StringItem("Contato: ", name);
-        statusItem = new StringItem("Status: ", isOutgoing ? "Chamando..." : "Chamada recebida...");
-        durationItem = new StringItem("Duração: ", "--:--");
+        contactNameItem = new StringItem(Text.get("Contato: "), name);
+        statusItem = new StringItem("Status: ", isOutgoing ? Text.get("Chamando...") : Text.get("Chamada recebida..."));
+        durationItem = new StringItem(Text.get("Duração: "), "--:--");
 
         append(contactNameItem);
         append(statusItem);
         append(durationItem);
 
-        acceptCmd = new Command("Atender", Command.OK, 1);
-        endCallCmd = new Command("Encerrar", Command.CANCEL, 2);
-        backCmd = new Command("Voltar", Command.BACK, 3);
+        acceptCmd = new Command(Text.get("Atender"), Command.OK, 1);
+        endCallCmd = new Command(Text.get("Encerrar"), Command.CANCEL, 2);
+        backCmd = new Command(Text.get("Voltar"), Command.BACK, 3);
 
         if (!isOutgoing) {
             addCommand(acceptCmd);
@@ -67,7 +69,7 @@ public class CallScreen extends Form implements CommandListener, VoiceCallManage
             removeCommand(acceptCmd);
             VoiceCallManager.getInstance().acceptCall();
         } else if (c == endCallCmd) {
-            VoiceCallManager.getInstance().endCall("Encerrado pelo usuário");
+            VoiceCallManager.getInstance().endCall(Text.get("Encerrado pelo usuário"));
             controller.showChatList();
         } else if (c == backCmd) {
             controller.showChatList();
@@ -76,15 +78,15 @@ public class CallScreen extends Form implements CommandListener, VoiceCallManage
 
     public void onCallStateChanged(int state, Jid peer, String reason) {
         if (state == VoiceCallManager.STATE_CALLING) {
-            statusItem.setText("Chamando...");
+            statusItem.setText(Text.get("Chamando..."));
         } else if (state == VoiceCallManager.STATE_RINGING) {
-            statusItem.setText("Tocando...");
+            statusItem.setText(Text.get("Tocando..."));
         } else if (state == VoiceCallManager.STATE_ACTIVE) {
-            statusItem.setText("Conectado (Audio ativo)");
+            statusItem.setText(Text.get("Conectado (Audio ativo)"));
             callStartTime = System.currentTimeMillis();
             durationItem.setText("00:00");
         } else if (state == VoiceCallManager.STATE_ENDED || state == VoiceCallManager.STATE_IDLE) {
-            statusItem.setText("Chamada encerrada: " + (reason != null ? reason : ""));
+            statusItem.setText(Text.get("Chamada encerrada: ") + (reason != null ? reason : ""));
         }
     }
 }

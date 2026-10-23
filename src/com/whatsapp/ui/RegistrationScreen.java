@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.net.RegistrationClient;
 import com.whatsapp.storage.AccountStore;
 
@@ -24,27 +26,27 @@ public class RegistrationScreen extends Form implements CommandListener, Registr
     private Command exitCmd;
 
     public RegistrationScreen(ScreenController controller) {
-        super("Registro WhatsApp");
+        super(Text.get("Registro WhatsApp"));
         this.controller = controller;
 
         AccountStore acc = AccountStore.getInstance();
 
-        append("Bem-vindo ao WhatsApp para BlackBerry J2ME!\nInsira seu número com DDI e DDD:\n");
+        append(Text.get("Bem-vindo ao WhatsApp para BlackBerry J2ME!\nInsira seu número com DDI e DDD:\n"));
 
-        ccField = new TextField("DDI (País):", acc.getCountryCode(), 5, TextField.NUMERIC);
-        phoneField = new TextField("Telefone (com DDD):", acc.getPhoneNumber(), 15, TextField.PHONENUMBER);
-        codeField = new TextField("Código SMS (6 dígitos):", "", 6, TextField.NUMERIC);
-        statusItem = new StringItem("Status:", "Pronto para registrar");
+        ccField = new TextField(Text.get("DDI (País):"), acc.getCountryCode(), 5, TextField.NUMERIC);
+        phoneField = new TextField(Text.get("Telefone (com DDD):"), acc.getPhoneNumber(), 15, TextField.PHONENUMBER);
+        codeField = new TextField(Text.get("Código SMS (6 dígitos):"), "", 6, TextField.NUMERIC);
+        statusItem = new StringItem("Status:", Text.get("Pronto para registrar"));
 
         append(ccField);
         append(phoneField);
         append(codeField);
         append(statusItem);
 
-        requestCodeCmd = new Command("Pedir Código", Command.OK, 1);
-        verifyCodeCmd = new Command("Verificar", Command.ITEM, 2);
-        skipCmd = new Command("Pular Registro", Command.SCREEN, 3);
-        exitCmd = new Command("Sair", Command.EXIT, 4);
+        requestCodeCmd = new Command(Text.get("Pedir Código"), Command.OK, 1);
+        verifyCodeCmd = new Command(Text.get("Verificar"), Command.ITEM, 2);
+        skipCmd = new Command(Text.get("Pular Registro"), Command.SCREEN, 3);
+        exitCmd = new Command(Text.get("Sair"), Command.EXIT, 4);
 
         addCommand(requestCodeCmd);
         addCommand(verifyCodeCmd);
@@ -59,20 +61,20 @@ public class RegistrationScreen extends Form implements CommandListener, Registr
             String cc = ccField.getString().trim();
             String phone = phoneField.getString().trim();
             if (phone.length() == 0) {
-                statusItem.setText("Por favor digite o telefone.");
+                statusItem.setText(Text.get("Por favor digite o telefone."));
                 return;
             }
-            statusItem.setText("Solicitando código SMS...");
+            statusItem.setText(Text.get("Solicitando código SMS..."));
             RegistrationClient.requestCode(cc, phone, "sms", this);
         } else if (c == verifyCodeCmd) {
             String cc = ccField.getString().trim();
             String phone = phoneField.getString().trim();
             String code = codeField.getString().trim();
             if (code.length() == 0) {
-                statusItem.setText("Digite o código recebido.");
+                statusItem.setText(Text.get("Digite o código recebido."));
                 return;
             }
-            statusItem.setText("Verificando código...");
+            statusItem.setText(Text.get("Verificando código..."));
             RegistrationClient.verifyCode(cc, phone, code, this);
         } else if (c == skipCmd) {
             AccountStore.getInstance().setRegistered(true);
@@ -84,13 +86,13 @@ public class RegistrationScreen extends Form implements CommandListener, Registr
     }
 
     public void onSuccess(String token, String message) {
-        statusItem.setText("Sucesso: " + message);
+        statusItem.setText(Text.get("Sucesso: ") + message);
         if (token != null) {
             controller.showChatList();
         }
     }
 
     public void onError(String message) {
-        statusItem.setText("Erro: " + message);
+        statusItem.setText(Text.get("Erro: ") + message);
     }
 }

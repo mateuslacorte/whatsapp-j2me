@@ -1,5 +1,7 @@
 package com.whatsapp.ui;
 
+import com.whatsapp.i18n.Text;
+
 import com.whatsapp.storage.AccountStore;
 
 import javax.microedition.lcdui.*;
@@ -20,22 +22,22 @@ public class SettingsScreen extends Form implements CommandListener {
     private Command backCmd;
 
     public SettingsScreen(ScreenController controller) {
-        super("Configurações WhatsApp");
+        super(Text.get("Configurações WhatsApp"));
         this.controller = controller;
 
         AccountStore acc = AccountStore.getInstance();
 
-        nameField = new TextField("Nome de exibição:", acc.getPushName(), 30, TextField.ANY);
-        deviceIdField = new TextField("ID do Aparelho:", acc.getDeviceId(), 30, TextField.ANY);
-        serverInfoItem = new StringItem("Servidor Baileys:", acc.getBaseUrl());
+        nameField = new TextField(Text.get("Nome de exibição:"), acc.getPushName(), 30, TextField.ANY);
+        deviceIdField = new TextField(Text.get("ID do Aparelho:"), acc.getDeviceId(), 30, TextField.ANY);
+        serverInfoItem = new StringItem(Text.get("Servidor Baileys:"), acc.getBaseUrl());
 
         append(nameField);
         append(deviceIdField);
         append(serverInfoItem);
 
-        saveCmd = new Command("Salvar", Command.OK, 1);
-        rePairCmd = new Command("Novo QR Code", Command.ITEM, 2);
-        backCmd = new Command("Voltar", Command.BACK, 3);
+        saveCmd = new Command(Text.get("Salvar"), Command.OK, 1);
+        rePairCmd = new Command(Text.get("Novo QR Code"), Command.ITEM, 2);
+        backCmd = new Command(Text.get("Voltar"), Command.BACK, 3);
 
         addCommand(saveCmd);
         addCommand(rePairCmd);
