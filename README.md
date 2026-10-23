@@ -22,7 +22,7 @@ Want to start messaging right away without setting up a server? You can download
 
 ### 2. Custom Pre-Compiled Build (Self-Hosted Backend)
 If you are hosting your own backend using **[baileys-j2me](https://github.com/mateuslacorte/baileys-j2me)** and don't know how (or don't want) to set up an old-school J2ME build environment, you can get a **custom-compiled version pre-configured with your own server URL**:
-- Subscribe to my membership club at **[members.lacorte.dev](https://members.lacorte.dev)** for just **$1/month**.
+- Subscribe to my membership club at **[members.lacorte.dev](https://members.lacorte.dev)** for just **$2/month**.
 - Alongside getting your custom build, you unlock several member perks and directly support the continued development of my projects.
 - *No strings attached: you are free to subscribe for a single month just to generate your custom build and cancel anytime.*
 
